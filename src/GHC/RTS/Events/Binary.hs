@@ -338,6 +338,21 @@ standardParsers = [
       nonmovingCensusFilledSegs <- get :: Get Word32
       nonmovingCensusLiveBlocks <- get :: Get Word32
       return NonmovingHeapCensus{..}
+    )),
+
+ (VariableSizeParser EVENT_TICKY_ENTRY_COUNTER_DEF (do
+      tickyCounterId <- get :: Get Word64
+      tickyCounterArity <- get :: Get Word16
+      tickyCounterArgKinds <- getTextNul
+      tickyCounterName <- getTextNul
+      return TickyEntryCounterDef{..}
+    )),
+ (FixedSizeParser EVENT_TICKY_ENTRY_COUNTER_SAMPLE 32 (do
+      tickyCounterId <- get :: Get Word64
+      tickyEntryCount <- get :: Get Word64
+      tickyEntryAllocs <- get :: Get Word64
+      tickyEntryAllocd <- get :: Get Word64
+      return TickyEntryCounterSample{..}
     ))
  ]
 
@@ -1031,6 +1046,8 @@ eventTypeNum e = case e of
     ConcSweepEnd {} -> EVENT_CONC_SWEEP_END
     ConcUpdRemSetFlush {} -> EVENT_CONC_UPD_REM_SET_FLUSH
     NonmovingHeapCensus {} -> EVENT_NONMOVING_HEAP_CENSUS
+    TickyEntryCounterDef {} -> EVENT_TICKY_ENTRY_COUNTER_DEF
+    TickyEntryCounterSample {} -> EVENT_TICKY_ENTRY_COUNTER_SAMPLE
 
 nEVENT_PERF_NAME, nEVENT_PERF_COUNTER, nEVENT_PERF_TRACEPOINT :: EventTypeNum
 nEVENT_PERF_NAME = EVENT_PERF_NAME
@@ -1471,3 +1488,13 @@ putEventSpec NonmovingHeapCensus {..} = do
     putE nonmovingCensusActiveSegs
     putE nonmovingCensusFilledSegs
     putE nonmovingCensusLiveBlocks
+putEventSpec TickyEntryCounterDef {..} = do
+    putE tickyCounterId
+    putE tickyCounterArity
+    putE $ T.unpack tickyCounterArgKinds
+    putE $ T.unpack tickyCounterName
+putEventSpec TickyEntryCounterSample {..} = do
+    putE tickyCounterId
+    putE tickyEntryCount
+    putE tickyEntryAllocs
+    putE tickyEntryAllocd

@@ -211,6 +211,9 @@
 #define EVENT_CONC_UPD_REM_SET_FLUSH       206
 #define EVENT_NONMOVING_HEAP_CENSUS        207
 
+#define EVENT_TICKY_ENTRY_COUNTER_DEF      210
+#define EVENT_TICKY_ENTRY_COUNTER_SAMPLE   211
+
 /*
  * The highest event code +1 that ghc itself emits. Note that some event
  * ranges higher than this are reserved but not currently emitted by ghc.

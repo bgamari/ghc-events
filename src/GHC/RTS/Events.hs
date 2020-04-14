@@ -512,6 +512,16 @@ buildEventInfo spec' =
           <> ": " <> TB.decimal nonmovingCensusActiveSegs <> " active segments"
           <> ", " <> TB.decimal nonmovingCensusFilledSegs <> " filled segments"
           <> ", " <> TB.decimal nonmovingCensusLiveBlocks <> " live blocks"
+        TickyEntryCounterDef {..} ->
+          "ticky-ticky entry counter definition " <> TB.decimal tickyCounterId
+          <> ": " <> TB.fromText tickyCounterName
+          <> ", args=" <> TB.fromText tickyCounterArgKinds
+          <> ", arity=" <> TB.decimal tickyCounterArity
+        TickyEntryCounterSample {..} ->
+          "ticky-ticky entry counter sample " <> TB.decimal tickyCounterId
+          <> ": entries=" <> TB.decimal tickyEntryCount
+          <> ", allocs=" <> TB.decimal tickyEntryAllocs
+          <> ", allocd=" <> TB.decimal tickyEntryAllocd
 
 -- | Replace unprintable bytes in the message with the replacement character
 replaceUnprintableWith
